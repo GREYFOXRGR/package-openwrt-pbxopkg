@@ -47,6 +47,7 @@ define Build/Configure
 endef
 
 define Package/pbxopkg/install
+# This is not allowed to be empty otherwise no ipk will be generated.
 endef
 
 $(eval $(call BuildPackage,pbxopkg))
