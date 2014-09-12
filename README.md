@@ -1,4 +1,5 @@
-package-openwrt-pbxopkg
-=======================
+# package-openwrt-pbxopkg
 
-package that enhances the opkg.conf with out custom repositores
+A package that enhances the opkg.conf with the piratebox repositories.
+
+Packages are available for stable and beta release.
