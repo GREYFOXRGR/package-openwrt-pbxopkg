@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pbxopkg
-PKG_VERSION:=0.0.5
+PKG_VERSION:=0.1.0
 PKG_RELEASE:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -9,9 +9,9 @@ include $(INCLUDE_DIR)/package.mk
 define Package/pbxopkg
   SECTION:=utils
   CATEGORY:=Network
-  TITLE:=PirateBox-pbxopkg
+  TITLE:=Repository-Integration
   SUBMENU:=PirateBox
-  URL:=http://piratebox.aod-rpg.de
+  URL:=http://piratebox.cc
   DEPENDS:= 
   PKGARCH:=all
   MAINTAINER:=Matthias Strubel <matthias.strubel@aod-rpg.de>
@@ -25,11 +25,13 @@ define Package/pbxopkg/postinst
 	#!/bin/sh
 	# . /etc/openwrt_release
 	# echo "src/gz piratebox http://stable.openwrt.piratebox.de/$DISTRIB_TARGET/packages" >> /etc/opkg.conf
-	[ -f "$IPKG_INSTROOT/etc/opkg.conf" ] &&
-	  grep '[ \t]*src/gz[ \t]*piratebox[ \t]*' "$IPKG_INSTROOT/etc/opkg.conf" > /dev/null &&
-	  exit 0
-
-	echo "src/gz piratebox http://stable.openwrt.piratebox.de/all/packages" >> "$IPKG_INSTROOT/etc/opkg.conf"
+	if [ -e "/etc/opkg.conf" ]; then
+		if grep '[ \t]*src/gz[ \t]*piratebox[ \t]*' "/etc/opkg.conf"; then
+			exit 0
+		else
+			echo "src/gz piratebox http://stable.openwrt.piratebox.de/all/packages" >> "/etc/opkg.conf"
+		fi
+	fi
 endef
 
 define Package/pbxopkg/preinst
@@ -37,7 +39,7 @@ endef
 
 define Package/pbxopkg/prerm
 	#!/bin/sh
-	sed 's|src/gz piratebox|#src/gz piratebox|'  -i /etc/opkg.conf
+	sed -i '/src\/gz piratebox.*/d' /etc/opkg.conf
 endef 
 
 define Build/Compile
